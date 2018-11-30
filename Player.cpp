@@ -806,7 +806,6 @@ int NumPlayersSelector::selectNumPlayers() {
     } while (!validChoice);
 
     return choice;
-
 }
 
 
