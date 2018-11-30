@@ -119,7 +119,6 @@ void Card::regeneration() {
     _subject->changeLifePoints(1);
     Message::lifePointsAfter();
     cout << _subject->getLifePoints();
-
 }
 
 
