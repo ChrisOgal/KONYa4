@@ -52,7 +52,8 @@ public:
 
     void setCardDeck() {
         cardDeck = LoadGamePieces::createCards();
-        shuffleCardDeck();
+        //TODO uncomment after testing
+        //shuffleCardDeck();
     }
 
     void shuffleCardDeck(){
@@ -235,6 +236,9 @@ public:
                 currentPlayer = &gamePlayers[i];
 
                 if (!(gamePlayers[i].isLost())) {
+
+                    notify("Start turn");
+                    gamePlayers[i].startTurn();
 
                     notify("Roll Dice Step");
                     gamePlayers[i].rollDice();

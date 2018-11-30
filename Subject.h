@@ -16,10 +16,11 @@ class Subject {
 
 public:
 
-    virtual void attach(Observer* o); //Links an observer to the calling subject.
-    virtual void detach(Observer* o); //Ends the relationship between observer and the subject.
-    virtual void notify(); //Provides the necessary observed information that has been observed.
-    virtual void notify(string message); //Provides a message that will be displayed for the information observed.
+    void attach(Observer* o); //Links an observer to the calling subject.
+    void detach(Observer* o); //Ends the relationship between observer and the subject.
+    void notify(); //Provides the necessary observed information that has been observed.
+    void notify(string message); //Provides a message that will be displayed for the information observed.
+    void notify(int cardNumber); //Notifies about the right action to perform
 
     Subject(); //Subject constructor.
     ~Subject(); //Subject destructor

@@ -39,12 +39,14 @@ void Token::toString() {
 //Card Class
 
 Card::Card() {
-    cost = -1;
+
+    cost = 1000;
     howToPlay = "";
     effect = "";
+
 }
 
-Card::Card(int aCost, string keepOrDiscard, string anEffect) {
+Card::Card (int aCost, string keepOrDiscard, string anEffect) {
     cost = aCost;
     howToPlay = keepOrDiscard;
     effect = anEffect;
@@ -84,7 +86,42 @@ void Card::toString() const {
 
 Card:: ~Card() {
     //TODO add destructor
+    //_subject->detach(this);
 }
+
+void Card::addSubject(Player* newSubject) {
+
+    _subject = newSubject;
+    _subject->attach(this);
+}
+
+void Card::Update() {
+
+}
+
+void Card::Update(std::string message) {
+
+}
+
+void Card::Update(int cardNumber) {
+
+    switch(cardNumber){
+        case 48: regeneration(); break;
+    }
+
+}
+
+void Card::regeneration() {
+
+    cout <<  effect << endl;
+    Message::lifePointsBefore();
+    cout << _subject->getLifePoints();
+    _subject->changeLifePoints(1);
+    Message::lifePointsAfter();
+    cout << _subject->getLifePoints();
+
+}
+
 
 //Tile Class
 
@@ -232,6 +269,7 @@ vector<Card> LoadGamePieces::createCards() {
         cardDeck.push_back(Card());
     }
 
+    /*
     cardDeck[0] = Card(0, "DISCARD", "Gain 4 ENERGY CUBES and take 4 damage.");
     cardDeck[1] = Card(5, "KEEP", "If your results are 2 DESTRUCTION, you get an extra Attack, 4 you get an extra 2 Attacks, 6 you win the game");
     cardDeck[2] = Card(5, "KEEP", "Monsters you attack lose 1 VICTORY POINT. ");
@@ -239,6 +277,8 @@ vector<Card> LoadGamePieces::createCards() {
     cardDeck[4] = Card(10, "KEEP", "You get 1 extra die.");
     cardDeck[5] = Card(3,"KEEP", "You need only 2 Destruction to destroy a Jet.");
     cardDeck[6] = Card(3,"KEEP", "Heal 2 damage when you enter Manhattan.");
+     */
+    cardDeck[0] = Card(5,"KEEP", "Heal 1 damage at the start of your turn");
 
 
     return cardDeck;

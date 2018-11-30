@@ -7,6 +7,9 @@
 #include <string>
 #include <vector>
 #include "Output.h"
+#include "Observer.h"
+#include "Player.h"
+
 
 using namespace std;
 
@@ -27,10 +30,10 @@ private:
     string name;
 };
 
-
+class Player;
 
 //Cards that will provide the user with different advantages and disadvantages if owned and used.
-class Card {
+class Card: public Observer {
 
 public:
 
@@ -52,11 +55,20 @@ public:
     void toString() const;
 
 
+    void addSubject(Player* newSubject);
+    void Update();
+    void Update(std::string message);
+    void Update(int cardNumber);
+
+    void regeneration();
+
 private:
 
     int cost; //in energy cubes
     string howToPlay; //KEEP OR DISCARD
     string effect; //The power that the player gets from the card.
+    Player* _subject;
+
 };
 
 
@@ -110,7 +122,7 @@ private:
 
 
 
-//An initializer for the various game pieces that will be used. Deafult values are given to ensure the same number of relevant pieces are generated each time.
+//An initializer for the various game pieces that will be used. Default values are given to ensure the same number of relevant pieces are generated each time.
 struct LoadGamePieces {
 
     const static int NUM_CARDS = 64;

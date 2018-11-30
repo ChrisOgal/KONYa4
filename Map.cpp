@@ -455,3 +455,6 @@ void MapObserver::Update(std::string message){
 
 void MapObserver::display(std::string message) {
 }
+
+void MapObserver::Update(int cardNumber) {
+}

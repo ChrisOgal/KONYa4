@@ -9,6 +9,7 @@ Subject::Subject() {
 }
 
 Subject::~Subject() {
+    if(_observers->size() > 0)
     delete _observers;
 }
 
@@ -30,6 +31,12 @@ void Subject::notify(string message) {
     list<Observer *>::iterator i = _observers->begin();
     for (; i != _observers->end(); ++i)
         (*i)->Update(message);
+}
+
+void Subject::notify(int cardNumber) {
+    list<Observer *>::iterator i = _observers->begin();
+    for (; i != _observers->end(); ++i)
+        (*i)->Update(cardNumber);
 }
 
 

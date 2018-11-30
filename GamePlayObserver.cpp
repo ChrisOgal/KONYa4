@@ -27,4 +27,8 @@ GamePlayObserver::GamePlayObserver(GamePlay* observed) {
 
 GamePlayObserver::~GamePlayObserver() {
     _subject->detach(this);
+}
+
+void GamePlayObserver::Update(int cardNumber) {
+
 };

@@ -11,11 +11,13 @@ class Observer {
 
 public:
 
-    ~Observer(); //Observer destructor.
+    virtual ~Observer(); //Observer destructor.
 
     virtual void Update() = 0; //Default update method that will keep track of or pass on some information about a subject.
 
     virtual void Update(std::string message) = 0; //Update method that will display any changes to the information being tracked by the observer.
+
+    virtual void Update(int cardNumber) = 0; //Update method that will display any changes to the information being tracked by the observer.
 
 protected:
 
