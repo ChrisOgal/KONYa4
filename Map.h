@@ -18,6 +18,9 @@ using namespace std;
 
 class Player;
 class Map;
+class Card;
+class Tile;
+class Token;
 
 const static int MAIN_ZONE = 0;
 const static int NON_MAIN_FIRST = 1;
@@ -198,6 +201,7 @@ public:
 
     void Update();
     void Update(string message);
+    void Update(int cardNumber);
 
     void display();
     void display(string message);

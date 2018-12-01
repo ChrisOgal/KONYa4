@@ -21,6 +21,7 @@ public:
 	//Similar implementation to the regular observers but expanded to report on all playrs and major events that will be displayed after every player turn or after significant game events.
     void Update();
     void Update(std::string message);
+    void Update(int cardNumber);
     void display(std::string message);
 
 private:

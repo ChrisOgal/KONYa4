@@ -10,18 +10,16 @@
 #include "Strategy.h"
 #include "DiceRollingFacility.h"
 #include "Subject.h"
-#include "Observer.h"
 
 using namespace std;
 
 class Subgraph;
 class DiceRollingFacility;
 class Strategy;
-class PlayerObserver;
 
 
 //Player class. the main part of the game that will keep track of a player, their health, victory points and what they own at each and every stage of the game.
-class Player
+class Player: public Subject
 
 {
 
@@ -78,6 +76,7 @@ public:
     //Other methods
     void toString();
 
+    void startTurn();
     void rollDice();//player rolls the game die and will later resolve them.
 
 	//Various methods to resolve the game die as per what the player rolled.
@@ -97,7 +96,7 @@ public:
     void moveToMain();
     bool mainFree();
 
-    bool isMoving(); // True if the player os currently moving.
+    bool isMoving(); // True if the player is currently moving.
     
 	void buyCard(); //Purchase of game cards as per the energy cubes owned.
     void checkHeal(); 
@@ -106,6 +105,7 @@ public:
     void removeMonsterToken();//Removes the given token to player's monster card.
     void firstRoll();//First roll to determine the game order.
     int attacksRolled();//Returns the number of attacks rolled y the player.
+
 
 private:
 	//Player class data members.
@@ -162,22 +162,6 @@ public:
 
 };
 
-
-
-
-//Players subject class that will be implemented as per the instructions in Subject.h
-class GamePlayers: public Subject {
-
-public:
-
-    GamePlayers();
-    ~GamePlayers();
-
-private:
-
-    vector <Player> players;
-
-};
 
 
 

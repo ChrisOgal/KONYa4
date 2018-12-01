@@ -15,7 +15,7 @@ Player::Player(){
     //currentCards = NULL;
     gameCards = NULL;
     vector <Token*> playerTokens (0);
-    energyCubes = 0;
+    energyCubes = 10; //TODO change to 0 after testing
     zoneNumber = 0;
     if(count % 3 == 0) setStrategy(new Human());
     else if(count % 3 == 1) setStrategy(new Moderate());
@@ -165,7 +165,13 @@ void Player::changeLifePoints(int number)
     }
 }
 
+void Player::startTurn() {
+
+    notify(48);
+
+}
 void Player::rollDice()
+
 {
     playerDice->setDice();
     playerDice->reRoll(1);
@@ -684,10 +690,11 @@ void Player::buyCard() {
             Message::energyCubesAfter();
             cout << energyCubes << endl;
 
-            if((*gameCards)[answer].getEffect() == "KEEP") {
+            if((*gameCards)[answer].getHowToPlay() == "KEEP") {
                 cout << "You bought a KEEP card\n";
                 cout << "Number of cards before: " << currentCards.size() << endl;
                 addCard((*gameCards)[answer]);
+                (*gameCards)[answer].addSubject(this);
                 cout << "Number of cards after: " << currentCards.size() << endl;
 
             }
@@ -774,9 +781,6 @@ void Player::setLost(bool lost) {
 }
 
 
-
-
-
 int NumPlayersSelector::selectNumPlayers() {
 
     int choice;
@@ -802,7 +806,6 @@ int NumPlayersSelector::selectNumPlayers() {
     } while (!validChoice);
 
     return choice;
-
 }
 
 
@@ -830,17 +833,5 @@ void PlayersCreation::createPlayers(int number){
 
 PlayersCreation::~PlayersCreation() {
 //TODO implement destructor
-}
-
-
-
-
-
-GamePlayers::GamePlayers() {
-
-}
-
-GamePlayers::~GamePlayers() {
-    //TODO implement destructor
 }
 
