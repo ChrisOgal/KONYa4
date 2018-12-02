@@ -240,6 +240,9 @@ public:
                     notify("Start turn");
                     gamePlayers[i].startTurn();
 
+                    notify("Buy Cards Step\n");
+                    gamePlayers[i].buyCard();
+
                     notify("Roll Dice Step");
                     gamePlayers[i].rollDice();
 
@@ -250,8 +253,8 @@ public:
                     notify("Move Step\n");
                     gamePlayers[i].move();
 
-                    notify("Buy Cards Step\n");
-                    gamePlayers[i].buyCard();
+                    //notify("Buy Cards Step\n");
+                    //gamePlayers[i].buyCard();
 
                     if (gamePlayers[i].getLifePoints() <= 0) {
                         cout << "E L I M I N A T E D! \nYou lost all your life points." << endl;

@@ -11,7 +11,7 @@ Player::Player(){
 
     monster = "";
     playerDice = new DiceRollingFacility(6);
-   currentPosition = NULL;
+    currentPosition = NULL;
     //currentCards = NULL;
     gameCards = NULL;
     vector <Token*> playerTokens (0);
@@ -24,7 +24,7 @@ Player::Player(){
     hasCelebrity = false;
     hasStatueOfLiberty = false;
     victoryPoints = 0;
-    lifePoints = 10;
+    lifePoints = 5; //TODO change to 10 after testing
     lost = false;
 
 }
@@ -67,6 +67,7 @@ void Player::setEnergyCubes(int number) {
 void Player::addCard(Card aCard)
 {
     currentCards.push_back(aCard);
+    currentCards.back().addSubject(this);
 
 }
 
@@ -167,6 +168,7 @@ void Player::changeLifePoints(int number)
 
 void Player::startTurn() {
 
+    notify(21);
     notify(48);
 
 }
@@ -305,36 +307,33 @@ void Player::resolveDestruction() {
 
         if (currentPosition->getTiles().size() == 0) {
             cout << "Everything has been destroyed" << endl;
-            break; }
+            break;
 
-        else {
+        } else {
 
             int input;
-            bool exit = false;
 
             for (int i = 0; i < 3; i++) {
 
-                exit = true;
 
-                if(!(currentPosition->getTiles()[i]->isDestroyed())) {
+                if (!(currentPosition->getTiles()[i]->isDestroyed())) {
 
-                    if(currentPosition->getTiles()[i]->getDurability() <= remainingDestruction) {
+                    if (currentPosition->getTiles()[i]->getDurability() <= remainingDestruction) {
 
-                        exit = false;
 
                         cout << "Do you want to destroy (1 = YES, 0 = NO)? ";
                         currentPosition->getTiles()[i]->toString();
-                        Tile* currentTile = currentPosition->getTiles()[i];
+                        Tile *currentTile = currentPosition->getTiles()[i];
                         cin >> input;
 
-                        if(Validate::checkInput(0,1,input) && input == 1){
+                        if (Validate::checkInput(0, 1, input) && input == 1) {
 
                             int rewardNumber;
 
                             if (currentTile->getName() == "High-Rise") {
 
                                 int remainingDestructionStart = remainingDestruction;
-                                if(currentTile->getDurability() >= remainingDestruction)
+                                if (currentTile->getDurability() >= remainingDestruction)
                                     remainingDestruction -= remainingDestruction;
                                 remainingDestruction -= currentTile->getDurability();
                                 rewardNumber = currentTile->destroyHighRise(remainingDestructionStart);
@@ -343,11 +342,11 @@ void Player::resolveDestruction() {
                                 changeVictoryPoints(rewardNumber);
                                 Message::victoryPointsAfter();
                                 cout << victoryPoints << endl << endl;
-                            }
+                                break;
 
-                            else if (currentTile->getName() == "Hospital") {
+                            } else if (currentTile->getName() == "Hospital") {
                                 int remainingDestructionStart = remainingDestruction;
-                                if(currentTile->getDurability() >= remainingDestruction)
+                                if (currentTile->getDurability() >= remainingDestruction)
                                     remainingDestruction -= remainingDestruction;
                                 rewardNumber = currentTile->destroyHospital(remainingDestructionStart);
                                 Message::lifePointsBefore();
@@ -355,12 +354,11 @@ void Player::resolveDestruction() {
                                 changeLifePoints(rewardNumber);
                                 Message::lifePointsAfter();
                                 cout << lifePoints << endl;
+                                break;
 
-                            }
-
-                            else if (currentTile->getName() == "Power Plant") {
+                            } else if (currentTile->getName() == "Power Plant") {
                                 int remainingDestructionStart = remainingDestruction;
-                                if(currentTile->getDurability() >= remainingDestruction)
+                                if (currentTile->getDurability() >= remainingDestruction)
                                     remainingDestruction -= remainingDestruction;
                                 rewardNumber = currentTile->destroyPowerPlant(remainingDestructionStart);
                                 Message::energyCubesBefore();
@@ -368,73 +366,65 @@ void Player::resolveDestruction() {
                                 changeEnergyCubes(rewardNumber);
                                 Message::energyCubesBefore();
                                 cout << energyCubes << endl;
+                                break;
 
-                            }
+                            } else if (currentTile->getName() == "Infantry") {
 
-                            else if (currentTile->getName() == "Infantry") {
                                 int remainingDestructionStart = remainingDestruction;
-                                if(currentTile->getDurability() >= remainingDestruction)
-                                    remainingDestruction -= remainingDestruction;
+                                remainingDestruction -= currentTile->getDurability();
                                 rewardNumber = currentTile->destroyInfantry(remainingDestructionStart);
-                                Message::lifePointsBefore();
-                                changeLifePoints(rewardNumber);
                                 Message::lifePointsBefore();
                                 cout << lifePoints << endl;
                                 changeLifePoints(rewardNumber);
                                 Message::lifePointsAfter();
                                 cout << lifePoints << endl;
+                                notify(38);
+                                break;
 
-                            }
-
-                            else if (currentTile->getName() == "Jet") {
+                            } else if (currentTile->getName() == "Jet") {
                                 int remainingDestructionStart = remainingDestruction;
-                                if(currentTile->getDurability() >= remainingDestruction)
-                                    remainingDestruction -= remainingDestruction;
+                                remainingDestruction -= currentTile->getDurability();
                                 rewardNumber = currentTile->destroyJet(remainingDestructionStart);
                                 Message::energyCubesBefore();
                                 cout << energyCubes << endl;
                                 changeEnergyCubes(rewardNumber);
                                 Message::energyCubesBefore();
                                 cout << energyCubes << endl;
+                                notify(38);
+                                break;
 
-                            }
-
-                            else if (currentTile->getName() == "Tank") {
+                            } else if (currentTile->getName() == "Tank") {
                                 int remainingDestructionStart = remainingDestruction;
-                                if(currentTile->getDurability() >= remainingDestruction)
-                                    remainingDestruction -= remainingDestruction;
+                                remainingDestruction -= currentTile->getDurability();
                                 rewardNumber = currentTile->destroyTank(remainingDestructionStart);
                                 Message::victoryPointsBefore();
                                 cout << victoryPoints << endl;
                                 changeVictoryPoints(rewardNumber);
                                 Message::victoryPointsAfter();
                                 cout << victoryPoints << endl << endl;
+                                notify(38);
+                                break;
 
                             }
 
                         }
 
+                    }
                 }
             }
 
-            if(remainingDestruction == 0) break;
+            bool valid = true;
+            int answer;
 
-            }
+            do {
+                cout << "Do you want to exit? (1 = YES, 0 = NO)" << endl;
+                cin >> answer;
+                valid = Validate::checkInput(0, 1, answer);
+            } while (!valid);
 
-            if (exit == true) break;
+            if (answer == 1) break;
+
         }
-
-        bool valid = true;
-        int answer;
-
-        do {
-            cout << "Do you want to exit? (1 = YES, 0 = NO)" << endl;
-            cin >> answer;
-            valid = Validate::checkInput(0, 1, answer);
-        } while (!valid);
-
-        if(answer == 1) break;
-
     }
 
 }
@@ -463,8 +453,9 @@ void Player::resolveCelebrity() {
                         cout << "You gained " << (1 + playerDice->countCelebrity() - 3) << " victory points\n";
                         changeVictoryPoints(1 + playerDice->countCelebrity() - 3);
                     }
-
                 }
+
+                position = position->getEdge();
             }
         }
 
@@ -501,6 +492,8 @@ void Player::resolveOuch(){
                         }
 
                     }
+
+                    position = position -> getEdge();
                 }
 
                 setHasStatueOfLiberty(true);
@@ -573,6 +566,38 @@ void Player::askMove() {
 
 }
 
+void Player::askMoveSuperSpeed() {
+
+    cout << monster << ": ";
+
+    if (isMoving()) {
+
+        Subgraph* position = currentPosition->getEdge();
+
+        bool valid;
+        int input;
+
+        while(position->getName() != currentPosition->getName()){
+            if ((position->getOwners().size()) < position->getMaxOwners()){
+                cout << "Do you want to move to ";
+                position->toString();
+                cout << endl << "(1 = YES, 0 NO)? " <<  endl;
+                cin >> input;
+                if(Validate::checkInput(0,1,input) && input == 1) break;
+            }
+            position = position->getEdge();
+        }
+
+        Subgraph* temp = currentPosition;
+
+        position->addOwner(this);
+        currentPosition = position;
+        temp->removeOwner(this);
+
+    }
+
+}
+
 bool Player::isMoving() {
 
     return mentality -> isMovingStrategy();
@@ -580,6 +605,8 @@ bool Player::isMoving() {
 
 
 void Player::moveToMain(){
+
+    notify(4);
 
     Subgraph* position = currentPosition->getEdge();
 
@@ -693,8 +720,7 @@ void Player::buyCard() {
             if((*gameCards)[answer].getHowToPlay() == "KEEP") {
                 cout << "You bought a KEEP card\n";
                 cout << "Number of cards before: " << currentCards.size() << endl;
-                addCard((*gameCards)[answer]);
-                (*gameCards)[answer].addSubject(this);
+                addCard(Card((*gameCards)[answer]));
                 cout << "Number of cards after: " << currentCards.size() << endl;
 
             }
@@ -703,6 +729,9 @@ void Player::buyCard() {
                 cout << "You bought a DISCARD card.\n";
                 cout << "Number of cards before: " << currentCards.size() << endl;
                 cout << "Number of cards after: " << currentCards.size() << endl;
+                (*gameCards)[answer].addSubject(this);
+                notify(18);
+                (*gameCards)[answer].removeSubject();
             }
 
             gameCards->erase(gameCards->begin()+answer);

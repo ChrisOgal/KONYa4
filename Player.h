@@ -91,6 +91,7 @@ public:
 	//Functions providing the player with the ability to move as per the designated moves from the game rules. Some moves may be forced to due to factors decided elsewhere in the game.
 	void move();
     void askMove();
+    void askMoveSuperSpeed();
 
 	//manhattan move functions. main refers to mahattan as it is the main borough in the  game.
     void moveToMain();
@@ -104,7 +105,8 @@ public:
     void addMonsterToken(Token newToken); //Adds the given token to player's monster card.
     void removeMonsterToken();//Removes the given token to player's monster card.
     void firstRoll();//First roll to determine the game order.
-    int attacksRolled();//Returns the number of attacks rolled y the player.
+    int attacksRolled();//Returns the number of attacks rolled by the player.
+
 
 
 private:

@@ -106,12 +106,13 @@ void Subgraph::toString() {
         }
     }
 
+    //TODO Change
     cout << "It has " << tiles.size() << " tiles on it. " << endl;
 
-    for (int i = 0; i < VISIBLE_TILES;) {
-        if(!tiles[i]->isDestroyed()) {
+    for (int i = 0, j = 0; i < tiles.size() && j < VISIBLE_TILES;i++) {
+        if(!(tiles[i]->isDestroyed())) {
             tiles[i]->toString();
-            i++;
+            j++;
         }
     }
 

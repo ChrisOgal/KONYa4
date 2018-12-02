@@ -40,16 +40,27 @@ void Token::toString() {
 
 Card::Card() {
 
+    id = -1;
     cost = 1000;
     howToPlay = "";
     effect = "";
 
 }
 
-Card::Card (int aCost, string keepOrDiscard, string anEffect) {
+Card::Card (int idNum, int aCost, string keepOrDiscard, string anEffect) {
+
+    id = idNum;
     cost = aCost;
     howToPlay = keepOrDiscard;
     effect = anEffect;
+}
+
+Card::Card( const Card& original)
+{
+    id = original.id;
+    cost = original.cost;
+    effect = original.effect;
+    howToPlay = original.howToPlay;
 }
 
 int Card::getCost() const {
@@ -95,6 +106,9 @@ void Card::addSubject(Player* newSubject) {
     _subject->attach(this);
 }
 
+void Card::removeSubject(){
+    _subject->detach(this);
+}
 void Card::Update() {
 
 }
@@ -106,19 +120,111 @@ void Card::Update(std::string message) {
 void Card::Update(int cardNumber) {
 
     switch(cardNumber){
-        case 48: regeneration(); break;
+
+        case 4:
+            if(id == cardNumber) chinatownRegular(); break;
+
+        case 18:
+            if(id == cardNumber) nextStage(); break;
+
+        case 21:
+            if (id == cardNumber) superSpeed(); break;
+
+        case 38:
+            if(id == cardNumber) trophyHunter(); break;
+
+            case 48:
+                if(id == cardNumber) regeneration(); break;
     }
 
 }
 
 void Card::regeneration() {
 
+    cout << "Regeneration card: " << endl;
     cout <<  effect << endl;
     Message::lifePointsBefore();
-    cout << _subject->getLifePoints();
+    cout << _subject->getLifePoints() << endl;
     _subject->changeLifePoints(1);
     Message::lifePointsAfter();
-    cout << _subject->getLifePoints();
+    cout << _subject->getLifePoints() << endl;
+}
+
+void Card::chinatownRegular() {
+    cout << "Chinatown Regular card: " << endl;
+    cout <<  effect << endl;
+    Message::lifePointsBefore();
+    cout << _subject->getLifePoints() << endl;
+    _subject->changeLifePoints(2);
+    Message::lifePointsAfter();
+    cout << _subject->getLifePoints() << endl;
+}
+
+void Card::superSpeed(){
+
+    cout << "Super Speed card: " << endl;
+    cout <<  effect << endl;
+    _subject->askMoveSuperSpeed();
+
+}
+
+void Card::nextStage() {
+
+    cout << "Next Stage card: " << endl;
+    cout <<  effect << endl;
+
+    int victoryPointsStart = _subject->getVictoryPoints();
+
+    Message::victoryPointsBefore();
+    cout << _subject->getVictoryPoints() << endl;
+    _subject->changeVictoryPoints(-(_subject->getVictoryPoints()));
+    Message::victoryPointsAfter();
+    cout << _subject->getVictoryPoints() << endl;
+
+    if(victoryPointsStart > 0) {
+        bool valid = true;
+        int answer;
+
+        do {
+            cout << "Enter 1 if you want to gain Energy Cubes, enter 0 if you want to Heal: " << endl;
+            cin >> answer;
+            valid = Validate::checkInput(0, 1, answer);
+        } while (!valid);
+
+        if (answer == 1) {
+            Message::energyCubesBefore();
+            cout << _subject->getEnergyCubes() << endl;
+            _subject->changeEnergyCubes(victoryPointsStart);
+            Message::energyCubesAfter();
+            cout << _subject->getEnergyCubes() << endl;
+        }
+
+        if (answer == 0) {
+
+            Message::lifePointsBefore();
+            cout << _subject->getLifePoints() << endl;
+            _subject->changeLifePoints(victoryPointsStart);
+            Message::lifePointsAfter();
+            cout << _subject->getLifePoints() << endl;
+        }
+    }
+
+}
+
+void Card::trophyHunter() {
+
+    cout << "Trophy Hunter card: " << endl;
+    cout <<  effect << endl;
+    Message::victoryPointsBefore();
+    cout << _subject->getVictoryPoints() << endl;
+    _subject->changeVictoryPoints(1);
+    Message::victoryPointsAfter();
+    cout << _subject->getVictoryPoints() << endl;
+
+}
+
+int Card::getId() {
+    return id;
 }
 
 
@@ -187,6 +293,7 @@ int Tile::destroyPowerPlant(int number){
         if(durability == 0) {
             changeToUnit(durabilityStart);
             Message::confirmDestruction();
+            this->toString();
             cout << endl;
             return reward;
         }
@@ -202,6 +309,7 @@ int Tile::destroyHospital(int number){
         durability--;
         if(durability == 0) {
             Message::confirmDestruction();
+            this->toString();
             cout << endl;
             changeToUnit(durabilityStart);
             return reward;
@@ -275,9 +383,12 @@ vector<Card> LoadGamePieces::createCards() {
     cardDeck[3] = Card(7, "KEEP", "You get 1 extra die.");
     cardDeck[4] = Card(10, "KEEP", "You get 1 extra die.");
     cardDeck[5] = Card(3,"KEEP", "You need only 2 Destruction to destroy a Jet.");
-    cardDeck[6] = Card(3,"KEEP", "Heal 2 damage when you enter Manhattan.");
      */
-    cardDeck[0] = Card(5,"KEEP", "Heal 1 damage at the start of your turn");
+    cardDeck[0] = Card(48, 5,"KEEP", "Heal 1 damage at the start of your turn");
+    cardDeck[1] = Card(4, 3,"KEEP", "Heal 2 damage when you enter Manhattan.");
+    cardDeck[2] = Card(38, 5, "KEEP", "Gain 1 VICTORY POINT each time you destroy a Unit.");
+    cardDeck[3] = Card(18, 4, "DISCARD", "Lose all your VICTORY POINTS. Gain 1 ENERGY CUBE or heal 1 damage for each VICTORY POINT you lost this way");
+    cardDeck[4] = Card(21, 4, "KEEP", "You have a free move before rolling the dice");
 
 
     return cardDeck;

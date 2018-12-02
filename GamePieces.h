@@ -39,13 +39,15 @@ public:
 
     //Constructors
     Card();
-    Card(int aCost, string keepOrDiscard, string anEffect);
+    Card(int idNum, int aCost, string keepOrDiscard, string anEffect);
+    Card( const Card& original);
     ~Card();
 
     //Accessors
     int getCost() const;
     string getHowToPlay();
     string getEffect();
+    int getId();
 
     //Mutators
     void setCost(int number);
@@ -56,14 +58,20 @@ public:
 
 
     void addSubject(Player* newSubject);
+    void removeSubject();
     void Update();
     void Update(std::string message);
     void Update(int cardNumber);
 
     void regeneration();
+    void chinatownRegular();
+    void superSpeed();
+    void nextStage();
+    void trophyHunter();
 
 private:
 
+    int id;
     int cost; //in energy cubes
     string howToPlay; //KEEP OR DISCARD
     string effect; //The power that the player gets from the card.
