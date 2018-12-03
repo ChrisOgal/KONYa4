@@ -259,7 +259,17 @@ void Player::resolveAttack() {
         while (position->getName() != currentPosition->getName()) {
             if (position->getIsMain());
             else {
-                position->attackOwners(-(playerDice->countAttacks()));
+
+				if (hasShadowDouble)
+				{
+					position->attackOwners(-(playerDice->countAttacks() * 2));
+					cout << endl << "Double Damage Dealt from Shadow Double Card!!";
+				}
+
+				else
+				{
+					position->attackOwners(-(playerDice->countAttacks()));
+				}
             }
             position = position->getEdge();
         }
@@ -342,6 +352,7 @@ void Player::resolveDestruction() {
                                 changeVictoryPoints(rewardNumber);
                                 Message::victoryPointsAfter();
                                 cout << victoryPoints << endl << endl;
+								notify(45);
                                 break;
 
                             } else if (currentTile->getName() == "Hospital") {
@@ -354,6 +365,7 @@ void Player::resolveDestruction() {
                                 changeLifePoints(rewardNumber);
                                 Message::lifePointsAfter();
                                 cout << lifePoints << endl;
+								notify(45);
                                 break;
 
                             } else if (currentTile->getName() == "Power Plant") {
@@ -366,6 +378,7 @@ void Player::resolveDestruction() {
                                 changeEnergyCubes(rewardNumber);
                                 Message::energyCubesBefore();
                                 cout << energyCubes << endl;
+								notify(45);
                                 break;
 
                             } else if (currentTile->getName() == "Infantry") {
@@ -378,6 +391,7 @@ void Player::resolveDestruction() {
                                 changeLifePoints(rewardNumber);
                                 Message::lifePointsAfter();
                                 cout << lifePoints << endl;
+								notify(33);
                                 notify(38);
                                 break;
 
@@ -432,6 +446,11 @@ void Player::resolveDestruction() {
 
 void Player::resolveCelebrity() {
 
+
+	if (playerDice->countCelebrity() >= 1)
+	{
+		notify(44);
+	}
     if (hasCelebrity) {
         cout << "You have the Celebrity Card.\n You gained " << playerDice->countCelebrity() << " victory points!\n";
         cout << "New number of victory points: " << victoryPoints << endl;
@@ -640,6 +659,13 @@ bool Player::isHasStatueOfLiberty() const {
 void Player::setHasStatueOfLiberty(bool hasStatueOfLiberty) {
     Player::hasStatueOfLiberty = hasStatueOfLiberty;
 }
+
+void Player::setHasShadowDouble(bool ownsShadowDouble)
+{
+	Player::hasShadowDouble = ownsShadowDouble;
+}
+
+
 
 void Player::buyCard() {
 

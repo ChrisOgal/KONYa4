@@ -42,6 +42,7 @@ public:
     bool isHasCelebrity() const {
         return hasCelebrity;
     }
+	bool isHasShadowDouble() const { return hasShadowDouble; }
     bool isHasStatueOfLiberty() const;
     bool isLost() const;
     int getVictoryPoints();
@@ -62,6 +63,7 @@ public:
         Player::hasCelebrity = hasCelebrity;
     }
     void setHasStatueOfLiberty(bool hasStatueOfLiberty);
+	void setHasShadowDouble(bool ownsShadowDouble);
     void setGameCards(vector<Card> *gameCards);
     void setLost(bool lost);
     void setStrategy(Strategy* chosenMentality);//Strategy selector
@@ -122,6 +124,7 @@ private:
     Strategy* mentality;
     bool hasCelebrity;
     bool hasStatueOfLiberty;
+	bool hasShadowDouble;
     int victoryPoints;
     int lifePoints;
     vector <Token> monsterTokens;
