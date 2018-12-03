@@ -460,6 +460,11 @@ vector<Card> LoadGamePieces::createCards() {
     cardDeck[2] = Card(38, 5, "KEEP", "Gain 1 VICTORY POINT each time you destroy a Unit.");
     cardDeck[3] = Card(18, 4, "DISCARD", "Lose all your VICTORY POINTS. Gain 1 ENERGY CUBE or heal 1 damage for each VICTORY POINT you lost this way");
     cardDeck[4] = Card(21, 4, "KEEP", "You have a free move before rolling the dice");
+	cardDeck[5] = Card(33, 5, "KEEP", "Heal 1 damage each time you destroy an infantry");
+	cardDeck[6] = Card(37, 5, "KEEP", "Gain 1 ENERGY CUBE and heal 1 damage when you start your turn in Queens. ");
+	cardDeck[7] = Card(44, 5, "KEEP", "Gain 1 VICTORY POINT each turn you rolled at least 1 Celebrity.");
+	cardDeck[8] = Card(45, 5, "KEEP", "Gain 1 VICTORY POINT each turn that you destroy at least one Building. ");
+	cardDeck[9] = Card(64, 12, "KEEP", "Whenever you attack, you deal double damage. ");
 
 
     return cardDeck;
