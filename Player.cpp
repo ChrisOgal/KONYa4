@@ -11,11 +11,12 @@ Player::Player(){
 
     monster = "";
     playerDice = new DiceRollingFacility(6);
+    diceObserver = new DiceEffectsObserver(playerDice);
     currentPosition = NULL;
     //currentCards = NULL;
     gameCards = NULL;
     vector <Token*> playerTokens (0);
-    energyCubes = 10; //TODO change to 0 after testing
+    energyCubes = 0;
     zoneNumber = 0;
     if(count % 3 == 0) setStrategy(new Human());
     else if(count % 3 == 1) setStrategy(new Moderate());
@@ -24,7 +25,7 @@ Player::Player(){
     hasCelebrity = false;
     hasStatueOfLiberty = false;
     victoryPoints = 0;
-    lifePoints = 5; //TODO change to 10 after testing
+    lifePoints = 10;
     lost = false;
 
 }
@@ -127,10 +128,15 @@ void Player::toString()
     if (currentCards.size() == 0)
         cout << "Has no cards." << endl;
     else {
-        cout << "Has these cards:" << endl;
-        for (int i = 0; i < currentCards.size(); i++)
+        cout << "Has these cards:" << endl << endl;
+        for (int i = 0; i < currentCards.size(); i++) {
+            cout << i+1 << " ----> ";
             currentCards[i].toString();
+            cout << endl;
+        }
     }
+    cout << (hasCelebrity?"Has the Celebrity Card":"Doesn't have the Celebrity Card") << endl;
+    cout << (hasStatueOfLiberty?"Has the Statue of Liberty Card": "Doesn't have the Statue of Liberty Card") << endl;
 }
 
 
@@ -169,12 +175,14 @@ void Player::changeLifePoints(int number)
 void Player::startTurn() {
 
     notify(21);
+	notify(37);
     notify(48);
 
 }
 void Player::rollDice()
 
 {
+	checkHeal();
     playerDice->setDice();
     playerDice->reRoll(1);
 }
@@ -190,11 +198,11 @@ int Player::attacksRolled() {
 
 void Player::resolveTheDice() {
 
-    checkHeal();
+    
 
     while (!playerDice->isEmpty()) {
 
-        playerDice->display();
+        playerDice->notify();
 
         int answer = mentality->resolveDiceStrategy (&(playerDice->getDice()));
 
@@ -259,8 +267,9 @@ void Player::resolveAttack() {
         while (position->getName() != currentPosition->getName()) {
             if (position->getIsMain());
             else {
+                      
 
-				if (hasShadowDouble)
+				if (this->isHasShadowDouble() == true)
 				{
 					position->attackOwners(-(playerDice->countAttacks() * 2));
 					cout << endl << "Double Damage Dealt from Shadow Double Card!!";
@@ -284,7 +293,17 @@ void Player::resolveAttack() {
                 if(position->getOwners().size() == 0)
                     cout << "\nThere is no one to attack." << endl;
                 else {
-                    position -> attackOwners(-(playerDice->countAttacks()));
+                   
+					if (this->isHasShadowDouble() == true)
+					{
+						position->attackOwners(-(playerDice->countAttacks() * 2));
+						cout << endl << "Double Damage Dealt from Shadow Double Card!!";
+					}
+
+					else
+					{
+						position->attackOwners(-(playerDice->countAttacks()));
+					}
                 }
             }
             position = position->getEdge();
@@ -312,6 +331,7 @@ void Player::resolveHeal() {
 void Player::resolveDestruction() {
 
     int remainingDestruction = playerDice->countDestruction();
+    bool canDestroy = false;
 
     while(remainingDestruction != 0) {
 
@@ -325,10 +345,13 @@ void Player::resolveDestruction() {
 
             for (int i = 0; i < 3; i++) {
 
+                canDestroy = false;
 
                 if (!(currentPosition->getTiles()[i]->isDestroyed())) {
 
                     if (currentPosition->getTiles()[i]->getDurability() <= remainingDestruction) {
+
+                        canDestroy = true;
 
 
                         cout << "Do you want to destroy (1 = YES, 0 = NO)? ";
@@ -352,7 +375,7 @@ void Player::resolveDestruction() {
                                 changeVictoryPoints(rewardNumber);
                                 Message::victoryPointsAfter();
                                 cout << victoryPoints << endl << endl;
-								notify(45);
+                                notify(45);
                                 break;
 
                             } else if (currentTile->getName() == "Hospital") {
@@ -365,7 +388,7 @@ void Player::resolveDestruction() {
                                 changeLifePoints(rewardNumber);
                                 Message::lifePointsAfter();
                                 cout << lifePoints << endl;
-								notify(45);
+                                notify(45);
                                 break;
 
                             } else if (currentTile->getName() == "Power Plant") {
@@ -378,7 +401,7 @@ void Player::resolveDestruction() {
                                 changeEnergyCubes(rewardNumber);
                                 Message::energyCubesBefore();
                                 cout << energyCubes << endl;
-								notify(45);
+                                notify(45);
                                 break;
 
                             } else if (currentTile->getName() == "Infantry") {
@@ -391,7 +414,8 @@ void Player::resolveDestruction() {
                                 changeLifePoints(rewardNumber);
                                 Message::lifePointsAfter();
                                 cout << lifePoints << endl;
-								notify(33);
+                                notify(33);
+                                cout << endl;
                                 notify(38);
                                 break;
 
@@ -427,6 +451,9 @@ void Player::resolveDestruction() {
                 }
             }
 
+            if(!canDestroy)
+                cout << "\nYou don't have enough Destruction to destroy anything. \n" << endl;
+
             bool valid = true;
             int answer;
 
@@ -441,16 +468,13 @@ void Player::resolveDestruction() {
         }
     }
 
+    cout << "\nYou don't have enough Destruction to destroy anything. \n" << endl;
+
 }
 
 
 void Player::resolveCelebrity() {
 
-
-	if (playerDice->countCelebrity() >= 1)
-	{
-		notify(44);
-	}
     if (hasCelebrity) {
         cout << "You have the Celebrity Card.\n You gained " << playerDice->countCelebrity() << " victory points!\n";
         cout << "New number of victory points: " << victoryPoints << endl;
@@ -458,23 +482,42 @@ void Player::resolveCelebrity() {
     }
 
     else {
+
+        if (playerDice->countCelebrity() >= 1)
+        {
+            notify(44);
+        }
+
         if (playerDice->countCelebrity() >= 3) {
 
             cout << "You rolled 3 or more Celebrity." << endl;
 
             Subgraph *position = currentPosition->getEdge();
+
             while (position->getName() != currentPosition->getName()) {
+
                 for (int i = 0; i < position->getOwners().size(); i++) {
+
                     if (position->getOwners()[i]->isHasCelebrity()) {
+
                         cout << "You stole the Celebrity Card from " << position->getOwners()[i]->getMonster() << endl;
                         position->getOwners()[i]->setHasCelebrity(false);
                         setHasCelebrity(true);
+                        Message::victoryPointsBefore();
+                        cout << getVictoryPoints() << endl;
                         cout << "You gained " << (1 + playerDice->countCelebrity() - 3) << " victory points\n";
                         changeVictoryPoints(1 + playerDice->countCelebrity() - 3);
+                        Message::victoryPointsAfter();
+                        cout << getVictoryPoints() << endl;
                     }
                 }
 
                 position = position->getEdge();
+            }
+
+            if(hasCelebrity == false){
+                cout << "* * * Take the Superstar Card! * * * " << endl;
+                setHasCelebrity(true);
             }
         }
 
@@ -521,7 +564,7 @@ void Player::resolveOuch(){
     }
 
     Message::lifePointsAfter();
-    cout << lifePoints << endl << endl;
+    cout << this->getMonster() << " "<< lifePoints << endl << endl;
 }
 
 void Player::move() {
@@ -656,18 +699,19 @@ bool Player::isHasStatueOfLiberty() const {
     return hasStatueOfLiberty;
 }
 
+void Player::setHasShadowDouble(bool ownsShadowDouble)
+{
+    Player::hasShadowDouble = ownsShadowDouble;
+}
+
 void Player::setHasStatueOfLiberty(bool hasStatueOfLiberty) {
     Player::hasStatueOfLiberty = hasStatueOfLiberty;
 }
 
-void Player::setHasShadowDouble(bool ownsShadowDouble)
-{
-	Player::hasShadowDouble = ownsShadowDouble;
-}
-
-
-
 void Player::buyCard() {
+
+	Message::energyCubesBefore();
+	cout << this->getEnergyCubes() << endl;
 
     cout << "The top 3 Cards are: \n\n";
     cout << "[0] ";
@@ -746,6 +790,10 @@ void Player::buyCard() {
             if((*gameCards)[answer].getHowToPlay() == "KEEP") {
                 cout << "You bought a KEEP card\n";
                 cout << "Number of cards before: " << currentCards.size() << endl;
+				if ((*gameCards)[answer].getId() == 64)
+				{
+					this->setHasShadowDouble(true);
+				}
                 addCard(Card((*gameCards)[answer]));
                 cout << "Number of cards after: " << currentCards.size() << endl;
 
@@ -797,6 +845,19 @@ int Player::getLifePoints() {
 vector <Token> Player::getMonsterTokens() {
     return monsterTokens;
 }
+
+/*bool Player::hasCard(Card aCard)
+{
+	for (int i = 0; i < this->getCurrentCards().size(); i++)
+	{
+		if (this->getCurrentCards()[i].getId == aCard.getId)
+		{
+			return true;
+		}
+	}
+	
+	return false;
+} */
 
 //Adds tokens to the Monster
 void Player::addMonsterToken(Token newToken) {

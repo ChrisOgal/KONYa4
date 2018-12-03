@@ -6,11 +6,14 @@
 #include "Player.h"
 #include "Subject.h"
 
+
+//General Functions used to enforce the rules while running the game
 class GamePlay: public Subject {
 
 
 private:
 
+	//Data members
     Map *gameMap;
     MapObserver *gameMapObserver;
     vector <Player> gamePlayers;
@@ -21,12 +24,12 @@ private:
 
 public:
 
-    Player *getCurrentPlayer() const {
+    Player *getCurrentPlayer() const {  //Returns the player whose turn it is
         return currentPlayer;
     }
 
 
-    void setGameMap() {
+    void setGameMap() {  //Sets up the game map and places the appropriate buildings around.
 
         gameMap = new Map();
         gameMapObserver = new MapObserver(gameMap);
@@ -37,7 +40,7 @@ public:
 
     }
 
-    void setGamePlayers() {
+    void setGamePlayers() {  //Sets the number of players and spreads them out according to the rules of the game.
 
         gamePlayers = NumPlayersSelector::select();
         cout << endl;
@@ -69,7 +72,7 @@ public:
         }
     }
 
-    void decideOrder(){
+    void decideOrder(){  //First die roll to decide the game order of the players
 
         cout << "===> Deciding order: " << endl << endl;
 
@@ -96,7 +99,7 @@ public:
         cout << endl;
     }
 
-    int findMax(){
+    int findMax(){  //Finds the highest number of attacks rolled. Helper function to the decideOrder function.
 
         int first = 0;
         for (int i = 1; i < gamePlayers.size(); i++){
@@ -187,7 +190,7 @@ public:
     }
 
 
-    bool endGame() {
+    bool endGame() {   //Checks for game ending scenarios
 
             int countAlive = 0;
             int alive = -1;
@@ -212,7 +215,7 @@ public:
         return false;
     }
 
-    bool winner(){
+    bool winner(){  //Checks for players in a game winning scenario
 
         if(currentPlayer->getVictoryPoints() == 20 && currentPlayer->getLifePoints() > 0) {
             currentPlayer->toString();
@@ -227,7 +230,7 @@ public:
         return false;
     }
 
-    void GameLoop() {
+    void GameLoop() {  //Main game loop. Runs until a game ending scenario is achieved.
 
         while (!endGame()) {
 

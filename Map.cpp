@@ -106,8 +106,9 @@ void Subgraph::toString() {
         }
     }
 
-    //TODO Change
-    cout << "It has " << tiles.size() << " tiles on it. " << endl;
+
+
+    cout << "It has " <<  countTiles() << " tiles on it. " << endl;
 
     for (int i = 0, j = 0; i < tiles.size() && j < VISIBLE_TILES;i++) {
         if(!(tiles[i]->isDestroyed())) {
@@ -116,6 +117,17 @@ void Subgraph::toString() {
         }
     }
 
+}
+
+int Subgraph::countTiles(){
+
+    int count = 0;
+    for (int i = 0; i < tiles.size(); i++){
+        if(!(tiles[i]->isDestroyed())) {
+            count++;
+        }
+    }
+    return count;
 }
 
 void Subgraph::attackOwners(int number)
@@ -165,6 +177,8 @@ void Subgraph::ouch() {
     for (int i = 0; i < owners.size(); i++){
         owners[i]->changeLifePoints(-countUnits());
         cout << endl << owners[i]->getMonster() << " loses as many life points\n" << endl;
+		Message::lifePointsAfter();
+		cout << owners[i]->getMonster() << " " << owners[i]->getLifePoints() << endl << endl;
     }
 
 }
@@ -433,6 +447,16 @@ void MapObserver::display() {
         gameMap[i].toString();
         cout << endl;
     }
+
+    for (int i = 0; i < gameMap.size(); i++){
+        for(int j = 0; j < gameMap[i].getOwners().size(); j++){
+
+            for (int k = 0; k < gameMap[i].getOwners()[j]->getVictoryPoints(); k++){
+                cout << "=";
+            }
+            cout << "  " << gameMap[i].getOwners()[j]->getMonster() << endl;
+        }
+    }
     cout << "* * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\n" << endl;
 }
 
@@ -447,7 +471,7 @@ MapObserver::MapObserver(Map* observed) {
 
 MapObserver::~MapObserver() {
     _subject->detach(this);
-    //cout << "\nDeleted Player Observer\n";
+
 };
 
 

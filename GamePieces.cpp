@@ -120,33 +120,28 @@ void Card::Update(std::string message) {
 void Card::Update(int cardNumber) {
 
     switch(cardNumber){
-
         case 4:
             if(id == cardNumber) chinatownRegular(); break;
-
         case 18:
             if(id == cardNumber) nextStage(); break;
-
         case 21:
             if (id == cardNumber) superSpeed(); break;
+        
+        case 33:
+            if (id == cardNumber) hunter(); break;
 
-		case 27:
+		case 37:
 			if (id == cardNumber) kingOfQueens(); break;
-
-		case 33:
-			if (id == cardNumber) hunter(); break;
 
         case 38:
             if(id == cardNumber) trophyHunter(); break;
-			
-		case 44:
-			if (id == cardNumber) personalSpotlight(); break;
 
-		case 45:
-			if (id == cardNumber) leveler(); break;
-
-            case 48:
-                if(id == cardNumber) regeneration(); break;
+        case 44:
+            if (id == cardNumber) personalSpotlight(); break;
+        case 45:
+            if (id == cardNumber) leveler(); break;
+        case 48:
+            if(id == cardNumber) regeneration(); break;
     }
 
 }
@@ -237,62 +232,58 @@ void Card::trophyHunter() {
 
 void Card::leveler()
 {
-	cout << "Leveler card: " << endl;
-	cout << effect << endl;
-	Message::victoryPointsBefore();
-	cout << _subject->getVictoryPoints() << endl;
-	_subject->changeVictoryPoints(1);
-	Message::victoryPointsAfter();
-	cout << _subject->getVictoryPoints() << endl;
+    cout << "Leveler card: " << endl;
+    cout << effect << endl;
+    Message::victoryPointsBefore();
+    cout << _subject->getVictoryPoints() << endl;
+    _subject->changeVictoryPoints(1);
+    Message::victoryPointsAfter();
+    cout << _subject->getVictoryPoints() << endl;
 }
-
-
 void Card::hunter()
 {
-	cout << "Hunter card: " << endl;
-	cout << effect << endl;
-	Message::energyCubesBefore();
-	cout << _subject->getEnergyCubes() << endl;
-	_subject->changeEnergyCubes(1);
-	Message::energyCubesAfter();
-	cout << _subject->getEnergyCubes() << endl;
+    cout << "Hunter card: " << endl;
+    cout << effect << endl;
+    Message::lifePointsBefore();
+    cout << _subject->getLifePoints() << endl;
+    _subject->changeLifePoints(1);
+    Message::lifePointsAfter();
+    cout << _subject->getEnergyCubes() << endl;
 }
-
 void Card::kingOfQueens()
 {
-	cout << "King Of Queens card: " << endl;
-	cout << effect << endl;
-	Message::energyCubesBefore();
-	cout << _subject->getEnergyCubes() << endl;
-	Message::lifePointsBefore();
-	cout << _subject->getLifePoints() << endl;
-
-	if (_subject->getCurrentPosition()->getName()._Equal("Queens"))
-	{
-		_subject->changeEnergyCubes(1);
-		_subject->changeLifePoints(1);
-	}
-	Message::energyCubesAfter();
-	cout << _subject->getEnergyCubes() << endl;
-	Message::lifePointsAfter();
-	cout << _subject->getLifePoints() << endl;
+    cout << "King Of Queens card: " << endl;
+    cout << effect << endl;
+    Message::energyCubesBefore();
+    cout << _subject->getEnergyCubes() << endl;
+    Message::lifePointsBefore();
+    cout << _subject->getLifePoints() << endl;
+    if (_subject->getCurrentPosition()->getName().compare("Queens") == 0)
+    {
+        _subject->changeEnergyCubes(1);
+        _subject->changeLifePoints(1);
+    }
+    Message::energyCubesAfter();
+    cout << _subject->getEnergyCubes() << endl;
+    Message::lifePointsAfter();
+    cout << _subject->getLifePoints() << endl;
 }
-
 void Card::personalSpotlight()
 {
-	cout << "Personal Spotlight card: " << endl;
-	cout << effect << endl;
-	Message::victoryPointsBefore();
-	cout << _subject->getVictoryPoints() << endl;
-	Message::victoryPointsAfter();
-	cout << _subject->getVictoryPoints() << endl;
+    cout << "Personal Spotlight card: " << endl;
+    cout << effect << endl;
+    Message::victoryPointsBefore();
+    cout << _subject->getVictoryPoints() << endl;
+	_subject->changeVictoryPoints(1);
+    Message::victoryPointsAfter();
+    cout << _subject->getVictoryPoints() << endl;
 }
-
 void Card::shadowDouble()
 {
-	cout << "Shadow Double card: " << endl;
-	cout << effect << endl;
+    cout << "Shadow Double card: " << endl;
+    cout << effect << endl;
 }
+
 
 int Card::getId() {
     return id;
@@ -447,25 +438,16 @@ vector<Card> LoadGamePieces::createCards() {
         cardDeck.push_back(Card());
     }
 
-    /*
-    cardDeck[0] = Card(0, "DISCARD", "Gain 4 ENERGY CUBES and take 4 damage.");
-    cardDeck[1] = Card(5, "KEEP", "If your results are 2 DESTRUCTION, you get an extra Attack, 4 you get an extra 2 Attacks, 6 you win the game");
-    cardDeck[2] = Card(5, "KEEP", "Monsters you attack lose 1 VICTORY POINT. ");
-    cardDeck[3] = Card(7, "KEEP", "You get 1 extra die.");
-    cardDeck[4] = Card(10, "KEEP", "You get 1 extra die.");
-    cardDeck[5] = Card(3,"KEEP", "You need only 2 Destruction to destroy a Jet.");
-     */
     cardDeck[0] = Card(48, 5,"KEEP", "Heal 1 damage at the start of your turn");
     cardDeck[1] = Card(4, 3,"KEEP", "Heal 2 damage when you enter Manhattan.");
     cardDeck[2] = Card(38, 5, "KEEP", "Gain 1 VICTORY POINT each time you destroy a Unit.");
     cardDeck[3] = Card(18, 4, "DISCARD", "Lose all your VICTORY POINTS. Gain 1 ENERGY CUBE or heal 1 damage for each VICTORY POINT you lost this way");
     cardDeck[4] = Card(21, 4, "KEEP", "You have a free move before rolling the dice");
-	cardDeck[5] = Card(33, 5, "KEEP", "Heal 1 damage each time you destroy an infantry");
-	cardDeck[6] = Card(37, 5, "KEEP", "Gain 1 ENERGY CUBE and heal 1 damage when you start your turn in Queens. ");
-	cardDeck[7] = Card(44, 5, "KEEP", "Gain 1 VICTORY POINT each turn you rolled at least 1 Celebrity.");
-	cardDeck[8] = Card(45, 5, "KEEP", "Gain 1 VICTORY POINT each turn that you destroy at least one Building. ");
-	cardDeck[9] = Card(64, 12, "KEEP", "Whenever you attack, you deal double damage. ");
-
+    cardDeck[5] = Card(33, 5, "KEEP", "Heal 1 damage each time you destroy an infantry");
+    cardDeck[6] = Card(37, 5, "KEEP", "Gain 1 ENERGY CUBE and heal 1 damage when you start your turn in Queens. ");
+    cardDeck[7] = Card(44, 5, "KEEP", "Gain 1 VICTORY POINT each turn you rolled at least 1 Celebrity.");
+    cardDeck[8] = Card(45, 5, "KEEP", "Gain 1 VICTORY POINT each turn that you destroy at least one Building. ");
+    cardDeck[9] = Card(64, 12, "KEEP", "Whenever you attack, you deal double damage. ");
 
     return cardDeck;
 }

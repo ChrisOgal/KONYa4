@@ -6,6 +6,8 @@
 #include <random>
 
 #include "Strategy.h"
+#include "Subject.h"
+#include "Observer.h"
 
 
 using namespace std;
@@ -40,7 +42,7 @@ private:
 
 
 //Takes in the 6 game die and allows for various functions that involve the die including deciding who the game order and possible rolls and rerolls.
-class DiceRollingFacility {
+class DiceRollingFacility: public Subject {
 
 
 public:
@@ -65,7 +67,6 @@ public:
 
 	
     void reRoll(int number);//Reroll function with the number of die the player wishes to reroll.
-    void display();//Displays the game die's current state.
 
 	//Various counters for each of the provided powers.
     int countAttacks();
@@ -90,3 +91,19 @@ private:
     int needHeal;
 };
 
+
+class DiceEffectsObserver: public Observer{
+public:
+    DiceEffectsObserver(); //Observer constructor that will be generated at the beginning of the game loop.
+    DiceEffectsObserver(DiceRollingFacility* observed);
+    ~DiceEffectsObserver(); //Destructor.
+
+    //Similar implementation to the regular observers but expanded to report on all playrs and major events that will be displayed after every player turn or after significant game events.
+    void Update();
+    void Update(std::string message);
+    void Update(int cardNumber);
+    void display();
+
+private:
+    DiceRollingFacility* _subject; //Subject that will be the main game loop.
+};

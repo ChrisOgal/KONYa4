@@ -62,7 +62,7 @@ void DiceRollingFacility::setDice() {
         dice[i].setValue(number);
     }
 
-    display();
+    notify();
 }
 
 void DiceRollingFacility::resetDice() {
@@ -77,17 +77,6 @@ void DiceRollingFacility::setRollStrategy(Strategy *chosenStrategy)
     rollStrategy = chosenStrategy;
 }
 
-void DiceRollingFacility::display() {
-
-    cout << endl << "You rolled: " << endl;
-    for (int i = 0; i < dice.size(); i++) {
-        if(!dice[i].isPlayed())
-            cout << "[" << i << "]" << faces[dice[i].getValue()] << endl;
-    }
-
-    cout << endl;
-}
-
 void DiceRollingFacility::reRoll(int number) {
 
     int answer = rollStrategy->isReroll(countAttacks(),countHeal(),needHeal);
@@ -95,7 +84,7 @@ void DiceRollingFacility::reRoll(int number) {
     if (answer == 1) {
         rollStrategy->rollDice(&dice);
 
-        display();
+        notify();
 
         if (number != 2)
             reRoll(2);
@@ -195,3 +184,41 @@ void DiceRollingFacility::setNeedHeal(int needHeal) {
     DiceRollingFacility::needHeal = needHeal;
 }
 
+
+
+
+
+void DiceEffectsObserver::Update() {
+    display();
+}
+
+void DiceEffectsObserver::display(){
+
+    cout << endl << "You rolled: " << endl;
+    for (int i = 0; i < _subject->getDice().size(); i++) {
+        if(!_subject->getDice()[i].isPlayed())
+            cout << "[" << i << "]" << _subject->faces[_subject->getDice()[i].getValue()] << endl;
+    }
+
+    cout << endl;
+}
+
+void DiceEffectsObserver::Update(std::string message){
+
+}
+
+DiceEffectsObserver::DiceEffectsObserver() {
+};
+
+DiceEffectsObserver::DiceEffectsObserver(DiceRollingFacility* observed) {
+    _subject = observed;
+    _subject->attach(this);
+}
+
+DiceEffectsObserver::~DiceEffectsObserver() {
+    _subject->detach(this);
+}
+
+void DiceEffectsObserver::Update(int cardNumber) {
+
+};

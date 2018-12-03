@@ -99,6 +99,7 @@ public:
     void addOwner(Player *aPlayer);
     void removeOwner(Player *aPlayer);
     void toString();
+    int countTiles();//counts the number of tiles in the borough
 
     void attackOwners(int number);//Provides the attack points to all monsters in the given region as per game rules. Usually used mostly for Manhattan or due to ouch! powers.
     void setEdge(Subgraph* value);

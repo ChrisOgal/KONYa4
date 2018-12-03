@@ -9,12 +9,12 @@
 #include "Map.h"
 #include "Strategy.h"
 #include "DiceRollingFacility.h"
-#include "Subject.h"
 
 using namespace std;
 
 class Subgraph;
 class DiceRollingFacility;
+class DiceEffectsObserver;
 class Strategy;
 
 
@@ -42,12 +42,13 @@ public:
     bool isHasCelebrity() const {
         return hasCelebrity;
     }
-	bool isHasShadowDouble() const { return hasShadowDouble; }
     bool isHasStatueOfLiberty() const;
+    bool isHasShadowDouble() const { return hasShadowDouble; }
     bool isLost() const;
     int getVictoryPoints();
     int getLifePoints();
     vector <Token> getMonsterTokens();
+	//bool hasCard(Card aCard);
 
 
 
@@ -63,7 +64,7 @@ public:
         Player::hasCelebrity = hasCelebrity;
     }
     void setHasStatueOfLiberty(bool hasStatueOfLiberty);
-	void setHasShadowDouble(bool ownsShadowDouble);
+    void setHasShadowDouble(bool ownsShadowDouble);
     void setGameCards(vector<Card> *gameCards);
     void setLost(bool lost);
     void setStrategy(Strategy* chosenMentality);//Strategy selector
@@ -108,6 +109,7 @@ public:
     void removeMonsterToken();//Removes the given token to player's monster card.
     void firstRoll();//First roll to determine the game order.
     int attacksRolled();//Returns the number of attacks rolled by the player.
+	
 
 
 
@@ -115,6 +117,7 @@ private:
 	//Player class data members.
     string monster;
     DiceRollingFacility* playerDice;
+    DiceEffectsObserver * diceObserver;
     Subgraph* currentPosition;
     vector <Card> currentCards;
     vector <Card>* gameCards;
@@ -124,7 +127,7 @@ private:
     Strategy* mentality;
     bool hasCelebrity;
     bool hasStatueOfLiberty;
-	bool hasShadowDouble;
+    bool hasShadowDouble;
     int victoryPoints;
     int lifePoints;
     vector <Token> monsterTokens;

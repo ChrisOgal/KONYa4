@@ -68,11 +68,11 @@ public:
     void superSpeed();
     void nextStage();
     void trophyHunter();
-	void leveler();
-	void hunter();
-	void kingOfQueens();
-	void personalSpotlight();
-	void shadowDouble();
+    void leveler();
+    void hunter();
+    void kingOfQueens();
+    void personalSpotlight();
+    void shadowDouble();
 
 private:
 
