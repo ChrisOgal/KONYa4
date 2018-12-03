@@ -130,8 +130,20 @@ void Card::Update(int cardNumber) {
         case 21:
             if (id == cardNumber) superSpeed(); break;
 
+		case 27:
+			if (id == cardNumber) kingOfQueens(); break;
+
+		case 33:
+			if (id == cardNumber) hunter(); break;
+
         case 38:
             if(id == cardNumber) trophyHunter(); break;
+			
+		case 44:
+			if (id == cardNumber) personalSpotlight(); break;
+
+		case 45:
+			if (id == cardNumber) leveler(); break;
 
             case 48:
                 if(id == cardNumber) regeneration(); break;
@@ -221,6 +233,65 @@ void Card::trophyHunter() {
     Message::victoryPointsAfter();
     cout << _subject->getVictoryPoints() << endl;
 
+}
+
+void Card::leveler()
+{
+	cout << "Leveler card: " << endl;
+	cout << effect << endl;
+	Message::victoryPointsBefore();
+	cout << _subject->getVictoryPoints() << endl;
+	_subject->changeVictoryPoints(1);
+	Message::victoryPointsAfter();
+	cout << _subject->getVictoryPoints() << endl;
+}
+
+
+void Card::hunter()
+{
+	cout << "Hunter card: " << endl;
+	cout << effect << endl;
+	Message::energyCubesBefore();
+	cout << _subject->getEnergyCubes() << endl;
+	_subject->changeEnergyCubes(1);
+	Message::energyCubesAfter();
+	cout << _subject->getEnergyCubes() << endl;
+}
+
+void Card::kingOfQueens()
+{
+	cout << "King Of Queens card: " << endl;
+	cout << effect << endl;
+	Message::energyCubesBefore();
+	cout << _subject->getEnergyCubes() << endl;
+	Message::lifePointsBefore();
+	cout << _subject->getLifePoints() << endl;
+
+	if (_subject->getCurrentPosition()->getName()._Equal("Queens"))
+	{
+		_subject->changeEnergyCubes(1);
+		_subject->changeLifePoints(1);
+	}
+	Message::energyCubesAfter();
+	cout << _subject->getEnergyCubes() << endl;
+	Message::lifePointsAfter();
+	cout << _subject->getLifePoints() << endl;
+}
+
+void Card::personalSpotlight()
+{
+	cout << "Personal Spotlight card: " << endl;
+	cout << effect << endl;
+	Message::victoryPointsBefore();
+	cout << _subject->getVictoryPoints() << endl;
+	Message::victoryPointsAfter();
+	cout << _subject->getVictoryPoints() << endl;
+}
+
+void Card::shadowDouble()
+{
+	cout << "Shadow Double card: " << endl;
+	cout << effect << endl;
 }
 
 int Card::getId() {
